@@ -61,7 +61,7 @@ func separateInput(input: String) -> [String] {
     return input.components(separatedBy: " ")
 }
 
-func hasThreeElements(input: [String]) -> Bool {
+func hasCorrectDigitsOfGame(input: [String]) -> Bool {
     return input.count == digitsOfGame
 }
 
@@ -78,7 +78,7 @@ func isWithinRange(input: [String]) -> Bool {
 }
 
 func isValidInput(input: [String]) -> Bool {
-    guard hasThreeElements(input: input) else {
+    guard hasCorrectDigitsOfGame(input: input) else {
         return false
     }
     guard isComposedWithOnlyNums(input: input) else {
@@ -115,10 +115,18 @@ func generatePlayerNums() {
 
 //MARK: -게임 진행
 
-func judgeStrikeAndBall(at: Int) {
-    if randomTargetNums[at] == playerNums[at] {
+func isStrike(at point: Int) -> Bool {
+    return randomTargetNums[point] == playerNums[point]
+}
+
+func isBall(at point: Int) -> Bool {
+    return Set(randomTargetNums).contains(playerNums[point])
+}
+
+func judgeStrikeAndBall(at num: Int) {
+    if isStrike(at: num) {
         strikeCounts += 1
-    } else if Set(randomTargetNums).contains(playerNums[at]) {
+    } else if isBall(at: num) {
         ballCounts += 1
     }
 }
