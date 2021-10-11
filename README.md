@@ -6,6 +6,7 @@
 - [Flow Chart](#플로우-차트)
 - [코딩 컨벤션](#코딩-컨벤션)
 - [커밋 컨벤션](#커밋-컨벤션)
+- [고민되었던 점 & 해결방안](#고민되었던-점-및-해결방안)
 
 ## 플로우 차트
 
@@ -62,3 +63,59 @@ style = 세미콜론을 까먹어서 추가하는 것 같이 형식적인 부분
 refactor = production code를 수정하는 경우 (변수의 네이밍을 수정하는 경우)
 chore = 별로 중요하지 않은 일을 수정하는 경우 (코드의 변화가 생산적인 것이 아닌 경우)
 ```
+
+## 고민되었던 점 및 해결방안
+
+## - Array와 Set
+
+스트라이크와 볼을 판단하기 위해 집합의 원소값와 인덱스를 찾아야 하는 경우와 어떤 요소가 다른 집합에 속하는지를 판단할 필요가 있었다. 이 때 자료구조를 Array를 사용할지 Set의 사용을 고려해볼지 고민하다가, 우선은 인덱스로의 접근을 하기 위해 Array로 구현을 했었다. 구현 이후, 고민을 더 해보다가 Set이 일부 메서드에서는 더 좋은 처리 속도를 가지고 있음을 확인하고 개선하는데 사용해봤다.
+
+> Array : contains 메서드의 시간 복잡도 `O(n)`
+> 
+> Set : contains 메서드의 시간 복잡도 `O(1)`
+
+
+```swift
+// 개선 전
+randomTargetNumber.contains(playerNums[point])
+
+// 개선 후
+Set(randomTargetNumber).contains(playerNums[point])
+```
+
+## - String interpolation vs String append
+
+사용자의 입력에 대한 메시지를 출력해주기 위한 방식을 구현하다가 String을 `\( )` 형태로 하여 여러 번 프린트 해야하는 상황과, String을 이어 붙여서 하나의 문자열로 만들어 출력해줘야 하는 두 가지 상황 중 선택을 해야할 때가 있었다.
+
+이 때 [String interpolation vs String append](https://www.globalnerdy.com/2016/02/03/concatenating-strings-in-swift-which-way-is-faster/)를 참고하여 조금 더 성능이 좋은 `append` 방식을 채택하여 개선했다.
+
+## - 함수의 역할 분리
+
+하나의 함수가 하나의 기능/역할을 가질 수 있도록 하기 위해 최대한 분리해보고자 했다. 결과만을 출력해주는 print문 일지라도 단순히 적어두지 않고 함수 내부에 구현하여 작성하는 등 역할에 따른 1:1 함수 구현을 하고자 했다. 다만 하나의 기능을 최대한 쪼개서 하나의 함수에 넣으려고 하다보니, 함수가 많아짐에 따라 네이밍의 명홗성이 더 중요해짐을 느꼈고, 함수가 적힌 순서도 중요하다는 생각을 했다. 이에 기능 분리에 집중하되 이로 인해 발생할 수 있는 사이드 이펙트를 고려하며 구현해야겠다는 생각을 했다.
+
+
+## - 고차 함수 사용
+
+고차 함수를 사용할 때, 단축인자(`$0`)를 주로 사용하곤 했었다. 이 뿐만 아니라 보통 한 줄 안에 로직이 작성되기 때문에, 가독성을 최대한 높이려고 고민했다. 그래서 최대한 단순한 로직에만 사용하여 가독성을 해치지 않는 방향으로 구현했다. 오히렬 for문과 if문이 사용되어 줄이 길어지는 상황에서 고차함수를 사용함으로써 조금 더 간결해지고, 오히려 가독성이 높아지지 않았나 생각된다. 
+
+```swift
+// 개선 전 
+func isComposedWithOnlyNums(input: [String]) -> Bool {
+    var nums = [Int]()
+    for point in 0..<digitsOfGame {
+        if let num = Int(input[point]) {
+            nums.append(num)
+        }        
+    }
+    return num.count == digitsOfGame
+}
+
+// 개선 후 
+func isComposedWithOnlyNums(input: [String]) -> Bool {
+    return input.compactMap { Int($0) }.count == digitsOfGame
+}
+```
+
+
+
+
