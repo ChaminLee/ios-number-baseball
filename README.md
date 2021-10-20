@@ -3,12 +3,12 @@
 프로젝트 기간: 2021.10.05 ~ 2021.10.08
 
 ## 목차
-- [Flow Chart](#플로우-차트)
+- [Flow Chart](#flow-chart)
 - [코딩 컨벤션](#코딩-컨벤션)
 - [커밋 컨벤션](#커밋-컨벤션)
 - [고민되었던 점 & 해결방안](#고민되었던-점-및-해결방안)
 
-## 플로우 차트
+## Flow Chart
 
 ![](https://github.com/ICS-Asan/ios-number-baseball/blob/develop/FlowChart.png)
 
